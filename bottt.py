@@ -6,7 +6,7 @@ import telebot
 from concurrent.futures import ThreadPoolExecutor
 
 # Thay "TOKEN_CUA_BAN" bằng token bot Telegram của bạn
-TOKEN = "TOKEN_CUA_BAN"  # Token cố định
+TOKEN = "7446145238:AAE272hDRYFx6hWka_BF5AkV5IPGbA7b5bY"  # Token cố định
 bot = telebot.TeleBot(TOKEN)
 
 
