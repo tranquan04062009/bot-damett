@@ -127,19 +127,36 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
 
 @bot.message_handler(commands=['start'])
 def bat_dau(message):
-    bot.send_message(message.chat.id, "✨ Chào mừng bạn đến với bot! ✨\n\nĐây là bot tăng follow Instagram giúp bạn tăng người theo dõi và tương tác một cách dễ dàng và nhanh chóng. 🚀\n\n📌 Nếu có thắc mắc hoặc cần hỗ trợ, liên hệ với lập trình viên: @tranquan46")
-    bot.send_message(message.chat.id, "Hãy gửi tôi tên tài khoản giả mạo.")
+    bot.send_message(message.chat.id, "✨ Chào mừng bạn đến với bot! ✨\n\nĐây là bot tăng follow Instagram giúp bạn tăng người theo dõi và tương tác một cách dễ dàng và nhanh chóng. 🚀\n\n📌 Nếu có thắc mắc hoặc cần hỗ trợ, liên hệ với lập trình viên: @gglllw")
+    
+    # Tạo nút "Hủy"
+    markup = types.InlineKeyboardMarkup()
+    huy_button = types.InlineKeyboardButton("Hủy", callback_data="cancel")
+    markup.add(huy_button)
+    
+    bot.send_message(message.chat.id, "Hãy gửi tôi tên tài khoản giả mạo.", reply_markup=markup)
     bot.register_next_step_handler(message, lay_ten_nguoi_dung)
 
 def lay_ten_nguoi_dung(message):
     username = message.text
-    bot.send_message(message.chat.id, f"Tên người dùng: {username}. Vui lòng gửi mật khẩu.")
+    # Tạo nút "Hủy"
+    markup = types.InlineKeyboardMarkup()
+    huy_button = types.InlineKeyboardButton("Hủy", callback_data="cancel")
+    markup.add(huy_button)
+    
+    bot.send_message(message.chat.id, f"Tên người dùng: {username}. Vui lòng gửi mật khẩu.", reply_markup=markup)
     bot.register_next_step_handler(message, lay_mat_khau, username)
 
 def lay_mat_khau(message, username):
     password = message.text
     bot.send_message(message.chat.id, "Đã nhận, đang chờ đăng nhập...")
-    bot.send_message(message.chat.id, "Gửi tôi tên tài khoản bạn muốn tăng follow.")
+    
+    # Tạo nút "Hủy"
+    markup = types.InlineKeyboardMarkup()
+    huy_button = types.InlineKeyboardButton("Hủy", callback_data="cancel")
+    markup.add(huy_button)
+    
+    bot.send_message(message.chat.id, "Gửi tôi tên tài khoản bạn muốn tăng follow.", reply_markup=markup)
     bot.register_next_step_handler(message, lay_muc_tieu, username, password)
 
 def lay_muc_tieu(message, username, password):
@@ -178,5 +195,11 @@ def lay_muc_tieu(message, username, password):
         bot.send_message(message.chat.id, f"Đã tăng follow cho tài khoản thành công!")
     else:
         bot.send_message(message.chat.id, "Đăng nhập thất bại, vui lòng kiểm tra lại tên người dùng và mật khẩu của tài khoản giả mạo.")
+
+# Xử lý khi người dùng nhấn nút "Hủy"
+@bot.callback_query_handler(func=lambda call: call.data == "cancel")
+def huy_tien_trinh(call):
+    bot.send_message(call.message.chat.id, "Đã hủy tiến trình. Nếu muốn bắt đầu lại, dùng lệnh /start.")
+    bot.clear_step_handler_by_chat_id(call.message.chat.id)  # Xóa bước đang chờ xử lý
 
 bot.polling(none_stop=True)
