@@ -5,11 +5,22 @@ from getpass import getpass
 import telebot
 from concurrent.futures import ThreadPoolExecutor
 
-# Token cố định
-TOKEN = "7446145238:AAE272hDRYFx6hWka_BF5AkV5IPGbA7b5bY"
+# Thay "TOKEN_CUA_BAN" bằng token bot Telegram của bạn
+TOKEN = "TOKEN_CUA_BAN"  # Token cố định
 bot = telebot.TeleBot(TOKEN)
 
-def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
+
+def gui_follow(username, password, coo1, coo2, tragrt):
+    """
+    Gửi follow đến tài khoản Instagram mục tiêu.
+
+    Args:
+        username: Tên người dùng Instagram (tài khoản ảo).
+        password: Mật khẩu Instagram (tài khoản ảo).
+        coo1: Tên cookie.
+        coo2: Giá trị cookie.
+        tragrt: Tên người dùng Instagram mục tiêu cần tăng follow.
+    """
     cookies = {
         '_ga': 'GA1.2.379003127.1700346804',
         '_gid': 'GA1.2.2030621174.1700346804',
@@ -18,7 +29,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
     headers = {
         'authority': 'instamoda.org',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'accept-language': 'ar-AE,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'accept-language': 'vi,en-US;q=0.9,en;q=0.8',  # Thay đổi ngôn ngữ sang tiếng Việt
         'referer': 'https://instamoda.org/tools',
         'sec-ch-ua': '"Chromium";v="111", "Not(A:Brand";v="8"',
         'sec-ch-ua-mobile': '?1',
@@ -41,7 +52,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
     headers = {
         'authority': 'instamoda.org',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'accept-language': 'ar-AE,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'accept-language': 'vi,en-US;q=0.9,en;q=0.8', # Thay đổi ngôn ngữ
         'cache-control': 'max-age=0',
         'content-type': 'application/x-www-form-urlencoded',
         'origin': 'https://instamoda.org',
@@ -60,7 +71,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
         'formType': 'findUserID',
     }
     data = {
-        'username': muc_tieu,
+        'username': tragrt,
     }
     response = requests.post('https://instamoda.org/tools/send-follower', params=params, cookies=cookies, headers=headers, data=data)
     id = response.text.split('<input type="hidden" name="userID" value="')[1].split('"')[0]
@@ -72,7 +83,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
     headers = {
         'authority': 'instamoda.org',
         'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-        'accept-language': 'ar-AE,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'accept-language': 'vi,en-US;q=0.9,en;q=0.8', # Thay đổi ngôn ngữ
         'cache-control': 'max-age=0',
         'referer': 'https://instamoda.org/tools/send-follower',
         'sec-ch-ua': '"Chromium";v="111", "Not(A:Brand";v="8"',
@@ -94,7 +105,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
     headers = {
         'authority': 'instamoda.org',
         'accept': 'application/json, text/javascript, */*; q=0.01',
-        'accept-language': 'ar-AE,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'accept-language': 'vi,en-US;q=0.9,en;q=0.8',  # Thay đổi ngôn ngữ
         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'origin': 'https://instamoda.org',
         'referer': f'https://instamoda.org/tools/send-follower/{id}',
@@ -113,7 +124,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
     data = {
         'adet': '300',
         'userID': id,
-        'userName': muc_tieu,
+        'userName': tragrt,
     }
     response = requests.post(
         f'https://instamoda.org/tools/send-follower/{id}',
@@ -123,49 +134,48 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
         data=data,
     )
     if response.json()['status'] == 'success':
-        print(f'Đã tăng follow cho @{muc_tieu} ')
+        print(f'Đã gửi follow đến @{tragrt} ')
+
 
 @bot.message_handler(commands=['start'])
-def bat_dau(message):
-    bot.send_message(message.chat.id, "✨ Chào mừng bạn đến với bot! ✨\n\nĐây là bot tăng follow Instagram giúp bạn tăng người theo dõi và tương tác một cách dễ dàng và nhanh chóng. 🚀\n\n📌 Nếu có thắc mắc hoặc cần hỗ trợ, liên hệ với lập trình viên: @gglllw")
-    
-    # Tạo nút "Hủy"
-    markup = types.InlineKeyboardMarkup()
-    huy_button = types.InlineKeyboardButton("Hủy", callback_data="cancel")
-    markup.add(huy_button)
-    
-    bot.send_message(message.chat.id, "Hãy gửi tôi tên tài khoản giả mạo.", reply_markup=markup)
-    bot.register_next_step_handler(message, lay_ten_nguoi_dung)
+def start(message):
+    """
+    Xử lý lệnh /start.
+    """
+    bot.send_message(message.chat.id, "✨ Chào bạn, rất vui được gặp bạn! ✨\n\nBot này giúp bạn tăng follow Instagram một cách dễ dàng và nhanh chóng. 🚀\n\n📌 Nếu có bất kỳ câu hỏi hoặc cần hỗ trợ, hãy liên hệ với lập trình viên: @gglllw")
+    bot.send_message(message.chat.id, "Hãy gửi cho tôi tên tài khoản Instagram ảo của bạn.")
+    bot.register_next_step_handler(message, lay_username)
 
-def lay_ten_nguoi_dung(message):
+
+def lay_username(message):
+    """
+    Lấy tên người dùng Instagram ảo.
+    """
     username = message.text
-    # Tạo nút "Hủy"
-    markup = types.InlineKeyboardMarkup()
-    huy_button = types.InlineKeyboardButton("Hủy", callback_data="cancel")
-    markup.add(huy_button)
-    
-    bot.send_message(message.chat.id, f"Tên người dùng: {username}. Vui lòng gửi mật khẩu.", reply_markup=markup)
-    bot.register_next_step_handler(message, lay_mat_khau, username)
+    bot.send_message(message.chat.id, f"Tên tài khoản: {username}. Vui lòng gửi mật khẩu.")
+    bot.register_next_step_handler(message, lay_password, username)
 
-def lay_mat_khau(message, username):
+
+def lay_password(message, username):
+    """
+    Lấy mật khẩu Instagram ảo.
+    """
     password = message.text
-    bot.send_message(message.chat.id, "Đã nhận, đang chờ đăng nhập...")
-    
-    # Tạo nút "Hủy"
-    markup = types.InlineKeyboardMarkup()
-    huy_button = types.InlineKeyboardButton("Hủy", callback_data="cancel")
-    markup.add(huy_button)
-    
-    bot.send_message(message.chat.id, "Gửi tôi tên tài khoản bạn muốn tăng follow.", reply_markup=markup)
-    bot.register_next_step_handler(message, lay_muc_tieu, username, password)
+    bot.send_message(message.chat.id, "Đang chờ đăng nhập...")
+    bot.send_message(message.chat.id, "Gửi tên tài khoản Instagram bạn muốn tăng follow.")
+    bot.register_next_step_handler(message, lay_tragrt, username, password)
 
-def lay_muc_tieu(message, username, password):
-    muc_tieu = message.text
-    bot.send_message(message.chat.id, f"Đang kiểm tra tài khoản giả mạo và tài khoản mục tiêu: {muc_tieu}...")
+
+def lay_tragrt(message, username, password):
+    """
+    Lấy tên người dùng Instagram mục tiêu và thực hiện gửi follow.
+    """
+    tragrt = message.text
+    bot.send_message(message.chat.id, f"Đang kiểm tra tài khoản ảo và tài khoản mục tiêu: {tragrt}.  Vui lòng chờ...")
     headers = {
         'authority': 'instamoda.org',
         'accept': 'application/json, text/javascript, */*; q=0.01',
-        'accept-language': 'ar-AE,ar;q=0.9,en-US;q=0.8,en;q=0.7',
+        'accept-language': 'vi,en-US;q=0.9,en;q=0.8', # Thay đổi ngôn ngữ
         'content-type': 'application/x-www-form-urlencoded; charset=UTF-8',
         'origin': 'https://instamoda.org',
         'referer': 'https://instamoda.org/login',
@@ -186,20 +196,15 @@ def lay_muc_tieu(message, username, password):
         'antiForgeryToken': '92e040589f9f0237f5ddd02297bbcf92',
     }
     response = requests.post('https://instamoda.org/login', params=params, headers=headers, data=data)
-    
+
     if response.json()['status'] == 'success':
         for cookie_name, cookie_value in response.cookies.items():
             pass
         with ThreadPoolExecutor() as executor:
-            executor.submit(gui_theo_doi, username, password, cookie_name, cookie_value, muc_tieu)
-        bot.send_message(message.chat.id, f"Đã tăng follow cho tài khoản thành công!")
+            executor.submit(gui_follow, username, password, cookie_name, cookie_value, tragrt)
+        bot.send_message(message.chat.id, f"Đã gửi follow đến tài khoản của bạn!")
     else:
-        bot.send_message(message.chat.id, "Đăng nhập thất bại, vui lòng kiểm tra lại tên người dùng và mật khẩu của tài khoản giả mạo.")
+        bot.send_message(message.chat.id, "Đăng nhập thất bại. Vui lòng kiểm tra tên người dùng và mật khẩu của tài khoản ảo.")
 
-# Xử lý khi người dùng nhấn nút "Hủy"
-@bot.callback_query_handler(func=lambda call: call.data == "cancel")
-def huy_tien_trinh(call):
-    bot.send_message(call.message.chat.id, "Đã hủy tiến trình. Nếu muốn bắt đầu lại, dùng lệnh /start.")
-    bot.clear_step_handler_by_chat_id(call.message.chat.id)  # Xóa bước đang chờ xử lý
 
 bot.polling(none_stop=True)
