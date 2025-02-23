@@ -127,7 +127,7 @@ def gui_theo_doi(username, password, coo1, coo2, muc_tieu):
 
 @bot.message_handler(commands=['start'])
 def bat_dau(message):
-    bot.send_message(message.chat.id, "✨ Chào mừng bạn đến với bot! ✨\n\nĐây là bot tăng follow Instagram giúp bạn tăng người theo dõi và tương tác một cách dễ dàng và nhanh chóng. 🚀\n\n📌 Nếu có thắc mắc hoặc cần hỗ trợ, liên hệ với lập trình viên: @gglllw")
+    bot.send_message(message.chat.id, "✨ Chào mừng bạn đến với bot! ✨\n\nĐây là bot tăng follow Instagram giúp bạn tăng người theo dõi và tương tác một cách dễ dàng và nhanh chóng. 🚀\n\n📌 Nếu có thắc mắc hoặc cần hỗ trợ, liên hệ với lập trình viên: @tranquan46")
     bot.send_message(message.chat.id, "Hãy gửi tôi tên tài khoản giả mạo.")
     bot.register_next_step_handler(message, lay_ten_nguoi_dung)
 
